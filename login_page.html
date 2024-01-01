@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Portal Login</title>
+    <link rel="stylesheet" type="text/css" href="bee.css">
+</head>
+<body>
+    <div class="container">
+        <div class="illustration">
+            <img src="patientportal.png" alt="Illustration">
+        </div>
+        <div class="login-form">
+            <div class="logo">
+                <img src="AMHLogoNew.png" alt="amh_logo">
+            </div>
+            <h2>Patient Portal Login</h2>
+            <form id="loginForm">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+                <button type="submit">LOGIN</button>
+            </form>
+           
+            
+        </div>
+    </div>
+
+    <script type="module">
+        
+     
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        const firebaseConfig = {
+            
+       
+          apiKey: "AIzaSyApzVwWHShd5BWvV1ZxjKqmd2CjxHSbpQo",
+          authDomain: "drthungamanaswini.firebaseapp.com",
+          databaseURL: "https://drthungamanaswini-default-rtdb.firebaseio.com",
+          projectId: "drthungamanaswini",
+          storageBucket: "drthungamanaswini.appspot.com",
+          messagingSenderId: "378310157641",
+          appId: "1:378310157641:web:0f9bb6e4306223a6982698",
+          measurementId: "G-W4RS3RYYBJ"
+        };
+      
+           
+      
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase();
+
+        // Event listener for form submission
+        const loginForm = document.getElementById('loginForm');
+        loginForm.addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent the default form submission behavior
+
+            // Get the values from the form
+            const username = document.getElementById('username').value.toLowerCase().trim();
+            const password = document.getElementById('password').value.toLowerCase().trim();
+
+            // Check if the user exists in the Firebase database
+            const userRef = ref(db, 'admin/' + username);
+            get(userRef).then((snapshot) => {
+                if (snapshot.exists()) {
+                    const userData = snapshot.val();
+                    if (userData.password === password) {
+                        alert('Login successful!');
+                        // Redirect or perform further actions for a successful login
+                    } else {
+                        alert('Incorrect password. Please try again.');
+                    }
+                } else {
+                    alert('Admin does not exist. Please register.');
+                    // Redirect or perform further actions for a non-existing user
+                }
+            }).catch((error) => {
+                console.error('Error getting admin data:', error);
+            });
+        });
+    </script>
+</body>
+</html>
